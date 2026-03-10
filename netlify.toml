@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════
+#   AuthForge — Netlify Configuration
+#   No credit card required · Free forever
+# ═══════════════════════════════════════════
+
+[build]
+  # No build command needed — plain HTML/CSS/JS
+  publish = "."
+  functions = "netlify/functions"
+
+[dev]
+  # Local dev server port
+  port = 3000
+  targetPort = 8080
+
+# ── API ROUTE REDIRECTS ───────────────────
+# Maps clean /api/* URLs to Netlify Functions
+
+[[redirects]]
+  from = "/api/user"
+  to = "/.netlify/functions/user"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/validate"
+  to = "/.netlify/functions/validate"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/keys"
+  to = "/.netlify/functions/keys"
+  status = 200
+  force = true
+
+# ── SECURITY HEADERS ─────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# ── CACHE STATIC ASSETS ──────────────────
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

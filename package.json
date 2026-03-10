@@ -1,0 +1,17 @@
+{
+  "name": "authforge",
+  "version": "1.0.0",
+  "description": "AuthForge — Developer Authentication Platform",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step needed'",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "engines": {
+    "node": "20"
+  }
+}

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — AuthForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-mark">⬡</span>
+        <span>AuthForge</span>
+      </div>
+      <div style="padding:4px 12px;margin-bottom:12px">
+        <span class="admin-badge">⬡ Admin Panel</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Admin</div>
+        <a href="admin.html" class="sidebar-link active">
+          <span class="sidebar-link-icon">⊞</span> Overview
+        </a>
+        <a href="admin.html#users" class="sidebar-link">
+          <span class="sidebar-link-icon">👥</span> All Users
+        </a>
+        <a href="admin.html#keys" class="sidebar-link">
+          <span class="sidebar-link-icon">🔑</span> API Keys
+        </a>
+        <a href="admin.html#logs" class="sidebar-link">
+          <span class="sidebar-link-icon">📋</span> System Logs
+        </a>
+        <div class="sidebar-section">Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <span class="sidebar-link-icon">←</span> User Dashboard
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="theme-toggle" id="themeToggle" style="width:100%;border-radius:8px;justify-content:flex-start;gap:10px;padding:10px 12px">
+          <span class="theme-icon">◐</span>
+          <span style="font-size:0.85rem;font-weight:500">Toggle theme</span>
+        </button>
+        <div class="sidebar-user" style="margin-top:8px">
+          <div class="user-avatar user-avatar-initial" id="sidebarAvatar">A</div>
+          <div class="user-info">
+            <div class="user-name user-name-display">Admin</div>
+            <div class="user-role" style="font-size:0.72rem;color:var(--red)">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <div class="topbar">
+        <div class="topbar-title">
+          <h1>Admin Dashboard</h1>
+          <p>Manage users, API keys, and system logs</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="admin-badge">⬡ Admin</span>
+          <button class="btn-outline btn-sm" id="logoutBtn">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="page-content">
+
+        <!-- ADMIN STATS -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Users</div>
+            <div class="stat-card-val" id="totalUsers">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Active Keys</div>
+            <div class="stat-card-val" id="totalKeys">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Total API Calls</div>
+            <div class="stat-card-val" id="totalCalls">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Disabled Users</div>
+            <div class="stat-card-val" id="disabledUsers">—</div>
+          </div>
+        </div>
+
+        <!-- USER SEARCH -->
+        <div class="card" style="margin-bottom:24px">
+          <div class="card-header">
+            <span class="card-title">Search</span>
+          </div>
+          <div class="card-body">
+            <input type="text" id="userSearch" placeholder="Search by email or name..." style="width:100%;padding:10px 14px;background:var(--bg-2);border:1px solid var(--border-2);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none">
+          </div>
+        </div>
+
+        <!-- USERS TABLE -->
+        <div class="card" id="users" style="margin-bottom:24px">
+          <div class="card-header">
+            <span class="card-title">All Users</span>
+            <button class="btn-outline btn-sm" onclick="loadUsers()">↻ Refresh</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Plan</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-3)">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- API KEYS TABLE -->
+        <div class="card" id="keys" style="margin-bottom:24px">
+          <div class="card-header">
+            <span class="card-title">All API Keys</span>
+            <button class="btn-outline btn-sm" onclick="loadAllKeys()">↻ Refresh</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Owner</th>
+                  <th>Prefix</th>
+                  <th>Status</th>
+                  <th>Usage</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="keysTableBody">
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-3)">Loading keys...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SYSTEM LOGS -->
+        <div class="card" id="logs">
+          <div class="card-header">
+            <span class="card-title">System Logs</span>
+            <button class="btn-outline btn-sm" onclick="loadLogs()">↻ Refresh</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>User</th>
+                  <th>Endpoint</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="logsTableBody">
+                <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-3)">Loading logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+  <div id="toast-container"></div>
+
+  <script src="js/utils.js"></script>
+  <script type="module">
+    import { app } from './firebase/firebase-config.js';
+    import { requireAuth, logOut, auth } from './js/auth.js';
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      updateDoc,
+      deleteDoc,
+      query,
+      orderBy,
+      limit,
+      where,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const db = getFirestore(app);
+    let allUsers = [];
+
+    // ── CHECK ADMIN ──────────────────────
+    async function checkAdmin(user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const data = userDoc.data();
+      if (!data || data.role !== 'admin') {
+        showToast('Access denied. Admin only.', 'error');
+        setTimeout(() => window.location.href = '/dashboard.html', 1500);
+        return false;
+      }
+      return true;
+    }
+
+    // ── INIT ─────────────────────────────
+    async function init() {
+      showPageLoader('Loading admin panel...');
+      const user = await requireAuth();
+      const isAdmin = await checkAdmin(user);
+      if (!isAdmin) return;
+
+      document.querySelectorAll('.user-name-display').forEach(el => el.textContent = user.displayName || 'Admin');
+      document.querySelector('.user-avatar-initial').textContent = (user.displayName || 'A')[0].toUpperCase();
+
+      hidePageLoader();
+      await Promise.all([loadUsers(), loadAllKeys(), loadLogs(), loadStats()]);
+      initSidebarToggle();
+    }
+
+    // ── LOAD STATS ────────────────────────
+    async function loadStats() {
+      try {
+        const [usersSnap, keysSnap, logsSnap] = await Promise.all([
+          getDocs(collection(db, 'users')),
+          getDocs(query(collection(db, 'api_keys'), where('active', '==', true))),
+          getDocs(query(collection(db, 'api_usage'), limit(5000)))
+        ]);
+
+        document.getElementById('totalUsers').textContent = usersSnap.size;
+        document.getElementById('totalKeys').textContent = keysSnap.size;
+        document.getElementById('totalCalls').textContent = logsSnap.size.toLocaleString();
+
+        let disabled = 0;
+        usersSnap.forEach(d => { if (d.data().disabled) disabled++; });
+        document.getElementById('disabledUsers').textContent = disabled;
+      } catch (err) {
+        console.error('Stats error:', err);
+      }
+    }
+
+    // ── LOAD USERS ────────────────────────
+    window.loadUsers = async function() {
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-3)"><span class="spinner"></span></td></tr>`;
+
+      try {
+        const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
+        allUsers = [];
+        snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+        renderUsersTable(allUsers);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--red)">Error: ${err.message}</td></tr>`;
+      }
+    };
+
+    function renderUsersTable(users) {
+      const tbody = document.getElementById('usersTableBody');
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-3)">No users found</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = users.map(u => `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="user-avatar" style="width:32px;height:32px;font-size:0.85rem">${(u.displayName || u.email || '?')[0].toUpperCase()}</div>
+              <span style="font-weight:600;font-size:0.87rem">${escHtml(u.displayName || '—')}</span>
+            </div>
+          </td>
+          <td class="font-mono text-sm">${escHtml(u.email || '—')}</td>
+          <td><span class="badge-purple" style="padding:2px 8px;border-radius:4px;font-size:0.72rem">${u.plan || 'free'}</span></td>
+          <td>
+            <span class="status-badge ${u.disabled ? 'status-error' : 'status-active'}">
+              ${u.disabled ? '● Disabled' : '● Active'}
+            </span>
+          </td>
+          <td class="text-muted text-xs font-mono">${formatDate(u.createdAt)}</td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <button class="btn-icon ${u.disabled ? '' : 'danger'}" title="${u.disabled ? 'Enable' : 'Disable'}" onclick="toggleUserStatus('${u.id}', ${u.disabled})">
+                ${u.disabled ? '✓' : '⊘'}
+              </button>
+              <button class="btn-icon danger" title="Delete user" onclick="deleteUser('${u.id}')">⊗</button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    // Search filter
+    document.getElementById('userSearch').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allUsers.filter(u =>
+        (u.email || '').toLowerCase().includes(q) ||
+        (u.displayName || '').toLowerCase().includes(q)
+      );
+      renderUsersTable(filtered);
+    });
+
+    // ── USER ACTIONS ──────────────────────
+    window.toggleUserStatus = async function(uid, currentlyDisabled) {
+      try {
+        await updateDoc(doc(db, 'users', uid), { disabled: !currentlyDisabled });
+        showToast(`User ${currentlyDisabled ? 'enabled' : 'disabled'}.`, 'success');
+        loadUsers();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    };
+
+    window.deleteUser = async function(uid) {
+      const ok = await confirmAction('Delete this user? This cannot be undone and will remove all their data.');
+      if (!ok) return;
+      try {
+        await deleteDoc(doc(db, 'users', uid));
+        showToast('User deleted.', 'success');
+        loadUsers();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    };
+
+    // ── LOAD ALL KEYS ─────────────────────
+    window.loadAllKeys = async function() {
+      const tbody = document.getElementById('keysTableBody');
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-3)"><span class="spinner"></span></td></tr>`;
+
+      try {
+        const snap = await getDocs(query(collection(db, 'api_keys'), orderBy('createdAt', 'desc'), limit(100)));
+        const keys = [];
+        snap.forEach(d => keys.push({ id: d.id, ...d.data() }));
+
+        if (keys.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-3)">No API keys yet</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = keys.map(k => `
+          <tr>
+            <td style="font-weight:600;font-size:0.87rem">${escHtml(k.name || 'Unnamed')}</td>
+            <td class="font-mono text-xs text-muted">${k.userId?.substring(0,12)}...</td>
+            <td class="font-mono text-sm">${escHtml(k.keyPrefix || '—')}••••</td>
+            <td><span class="status-badge ${k.active ? 'status-active' : 'status-inactive'}">${k.active ? '● Active' : '● Disabled'}</span></td>
+            <td class="font-mono text-sm">${(k.usageCount || 0).toLocaleString()}</td>
+            <td class="text-muted text-xs font-mono">${formatDate(k.createdAt)}</td>
+            <td>
+              <button class="btn-icon danger" title="Delete key" onclick="adminDeleteKey('${k.id}')">⊗</button>
+            </td>
+          </tr>`).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--red);padding:24px">Error: ${err.message}</td></tr>`;
+      }
+    };
+
+    window.adminDeleteKey = async function(keyId) {
+      const ok = await confirmAction('Delete this API key?');
+      if (!ok) return;
+      try {
+        await deleteDoc(doc(db, 'api_keys', keyId));
+        showToast('Key deleted.', 'success');
+        loadAllKeys();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    };
+
+    // ── LOAD LOGS ─────────────────────────
+    window.loadLogs = async function() {
+      const tbody = document.getElementById('logsTableBody');
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-3)"><span class="spinner"></span></td></tr>`;
+
+      try {
+        const snap = await getDocs(query(
+          collection(db, 'api_usage'),
+          orderBy('timestamp', 'desc'),
+          limit(50)
+        ));
+        const logs = [];
+        snap.forEach(d => logs.push(d.data()));
+
+        if (logs.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-3)">No logs yet</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = logs.map(l => `
+          <tr>
+            <td class="font-mono text-sm">${escHtml(l.eventType || 'api_request')}</td>
+            <td class="font-mono text-xs text-muted">${(l.userId || '—').substring(0, 12)}...</td>
+            <td class="font-mono text-sm">${escHtml(l.endpoint || '/v1/user')}</td>
+            <td><span class="status-badge ${(l.statusCode || 200) < 400 ? 'status-active' : 'status-error'}">${l.statusCode || 200}</span></td>
+            <td class="text-muted text-xs">${timeAgo(l.timestamp)}</td>
+          </tr>`).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Error: ${err.message}</td></tr>`;
+      }
+    };
+
+    function escHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' })[m]);
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => logOut());
+
+    // Init
+    init();
+  </script>
+</body>
+</html>

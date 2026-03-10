@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation — AuthForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">⬡</span>
+        <span class="logo-text">AuthForge</span>
+      </a>
+      <div class="nav-links">
+        <a href="login.html" class="btn-ghost">Sign In</a>
+        <a href="signup.html" class="btn-primary">Get Started →</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle"><span class="theme-icon">◐</span></button>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <!-- DOCS SIDEBAR -->
+    <div class="docs-sidebar">
+      <div class="docs-nav-section">
+        <div class="docs-nav-title">Getting Started</div>
+        <a href="#intro" class="docs-nav-link active">Introduction</a>
+        <a href="#quickstart" class="docs-nav-link">Quick Start</a>
+        <a href="#authentication" class="docs-nav-link">Authentication</a>
+      </div>
+      <div class="docs-nav-section">
+        <div class="docs-nav-title">API Reference</div>
+        <a href="#endpoints" class="docs-nav-link">Endpoints</a>
+        <a href="#get-user" class="docs-nav-link">GET /user</a>
+        <a href="#validate-key" class="docs-nav-link">POST /validate</a>
+        <a href="#errors" class="docs-nav-link">Error Codes</a>
+      </div>
+      <div class="docs-nav-section">
+        <div class="docs-nav-title">Guides</div>
+        <a href="#api-keys" class="docs-nav-link">API Keys</a>
+        <a href="#rate-limits" class="docs-nav-link">Rate Limits</a>
+        <a href="#security" class="docs-nav-link">Security</a>
+        <a href="#sdks" class="docs-nav-link">SDKs & Examples</a>
+      </div>
+    </div>
+
+    <!-- DOCS CONTENT -->
+    <div class="docs-content">
+      <h1 id="intro">AuthForge Documentation</h1>
+      <p>AuthForge provides simple, secure API authentication infrastructure for developers. Add API key authentication to your applications in minutes.</p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin:20px 0">
+        <a href="signup.html" class="btn-primary">Get Started Free →</a>
+        <a href="playground.html" class="btn-outline">Try the Playground</a>
+      </div>
+
+      <h2 id="quickstart">Quick Start</h2>
+      <p>Get up and running in 3 steps:</p>
+
+      <h3>1. Create an account</h3>
+      <p>Sign up at <a href="/signup.html" style="color:var(--accent-2)">authforge.dev/signup</a>. No credit card required.</p>
+
+      <h3>2. Generate an API key</h3>
+      <p>From your dashboard, click <strong>Generate API Key</strong>. Copy the key immediately — it's shown only once.</p>
+
+      <h3>3. Make your first request</h3>
+      <pre><code>curl -X GET \
+  https://YOUR-SITE.netlify.app/api/user \
+  -H "Authorization: Bearer af_live_YOUR_KEY"</code></pre>
+
+      <h2 id="authentication">Authentication</h2>
+      <p>All API requests require a valid API key passed as a Bearer token in the <code>Authorization</code> header.</p>
+
+      <pre><code>Authorization: Bearer af_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code></pre>
+
+      <p>API keys are prefixed with <code>af_live_</code> for production or <code>af_test_</code> for test environments. Never expose your API key in client-side code.</p>
+
+      <div style="background:var(--yellow-bg);border:1px solid rgba(255,209,102,0.2);border-radius:8px;padding:16px 20px;margin:16px 0;font-size:0.88rem;color:var(--yellow)">
+        ⚠ <strong>Security:</strong> API keys grant full access to your account data. Store them as environment variables, never in source code.
+      </div>
+
+      <h2 id="endpoints">API Endpoints</h2>
+      <p>Base URL: <code>https://YOUR-SITE.netlify.app/api</code></p>
+
+      <h2 id="get-user">GET /user</h2>
+      <p>Returns the authenticated user's profile information.</p>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method-badge method-get">GET</span>
+          <span class="endpoint-path">/api/user</span>
+        </div>
+        <div class="endpoint-body">
+          <h3 style="margin-top:0;color:var(--text-2);font-size:0.85rem;font-weight:600">Request</h3>
+          <pre><code>curl -X GET \
+  https://YOUR-SITE.netlify.app/api/user \
+  -H "Authorization: Bearer af_live_xxxxx"</code></pre>
+
+          <h3 style="color:var(--text-2);font-size:0.85rem;font-weight:600">Response 200</h3>
+          <pre><code>{
+  "id": "usr_abc123",
+  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31555447545d5e415443715449505c415d541f525e5c">[email&#160;protected]</a>",
+  "displayName": "Jane Developer",
+  "plan": "free",
+  "created_at": "2025-01-15T10:30:00Z",
+  "apiCallCount": 142,
+  "emailVerified": true
+}</code></pre>
+        </div>
+      </div>
+
+      <h2 id="validate-key">POST /validate</h2>
+      <p>Validate an API key without returning user data. Useful for middleware.</p>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method-badge method-post">POST</span>
+          <span class="endpoint-path">/api/validate</span>
+        </div>
+        <div class="endpoint-body">
+          <h3 style="margin-top:0;color:var(--text-2);font-size:0.85rem;font-weight:600">Request Body</h3>
+          <pre><code>{
+  "apiKey": "af_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}</code></pre>
+          <h3 style="color:var(--text-2);font-size:0.85rem;font-weight:600">Response 200</h3>
+          <pre><code>{
+  "valid": true,
+  "userId": "usr_abc123",
+  "keyId": "key_xyz789"
+}</code></pre>
+        </div>
+      </div>
+
+      <h2 id="errors">Error Codes</h2>
+      <p>AuthForge uses standard HTTP status codes. Error responses include a <code>code</code> and <code>message</code> field.</p>
+
+      <div class="table-wrapper" style="margin:16px 0">
+        <table>
+          <thead>
+            <tr><th>Status</th><th>Code</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="status-badge status-error">401</span></td><td class="font-mono text-sm">UNAUTHORIZED</td><td class="text-muted">Missing or invalid API key</td></tr>
+            <tr><td><span class="status-badge status-error">403</span></td><td class="font-mono text-sm">FORBIDDEN</td><td class="text-muted">Key exists but account is disabled</td></tr>
+            <tr><td><span class="status-badge status-error">429</span></td><td class="font-mono text-sm">RATE_LIMITED</td><td class="text-muted">Too many requests</td></tr>
+            <tr><td><span class="status-badge status-error">500</span></td><td class="font-mono text-sm">INTERNAL_ERROR</td><td class="text-muted">Server-side error</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <pre><code>{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid API key provided",
+    "docs": "https://authforge.dev/docs#errors"
+  }
+}</code></pre>
+
+      <h2 id="api-keys">API Key Management</h2>
+      <p>API keys can be managed from your <a href="/dashboard.html" style="color:var(--accent-2)">dashboard</a> or programmatically.</p>
+      <ul style="color:var(--text-2);line-height:2;margin-left:20px;font-size:0.95rem">
+        <li>Keys are shown <strong>only once</strong> at creation — copy them immediately</li>
+        <li>Keys are stored as SHA-256 hashes — we cannot recover a lost key</li>
+        <li>You can generate multiple keys per account</li>
+        <li>Keys can be named, disabled, and deleted at any time</li>
+      </ul>
+
+      <h2 id="rate-limits">Rate Limits</h2>
+      <p>Free tier: <strong>1,000 requests/day</strong> per API key. Rate limit headers are included in every response:</p>
+      <pre><code>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 857
+X-RateLimit-Reset: 1736956800</code></pre>
+
+      <h2 id="security">Security</h2>
+      <p>AuthForge is designed with security-first principles:</p>
+      <ul style="color:var(--text-2);line-height:2;margin-left:20px;font-size:0.95rem">
+        <li>API keys are hashed with SHA-256 before storage</li>
+        <li>HTTPS enforced on all endpoints</li>
+        <li>Keys are shown only once at generation</li>
+        <li>All requests are logged with timestamps</li>
+        <li>Firebase Security Rules restrict data access</li>
+      </ul>
+
+      <h2 id="sdks">SDKs & Code Examples</h2>
+      <h3>Node.js</h3>
+      <pre><code>const response = await fetch('https://YOUR-SITE.netlify.app/api/user', {
+  headers: { 'Authorization': `Bearer ${process.env.AUTHFORGE_API_KEY}` }
+});
+const user = await response.json();</code></pre>
+
+      <h3>Python</h3>
+      <pre><code>import os, requests
+
+response = requests.get(
+  'https://YOUR-SITE.netlify.app/api/user',
+  headers={'Authorization': f'Bearer {os.environ["AUTHFORGE_API_KEY"]}'}
+)
+user = response.json()</code></pre>
+
+      <h3>PHP</h3>
+      <pre><code>$ch = curl_init('https://YOUR-SITE.netlify.app/api/user');
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  'Authorization: Bearer ' . $_ENV['AUTHFORGE_API_KEY']
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$user = json_decode(curl_exec($ch));</code></pre>
+    </div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/utils.js"></script>
+  <script>
+    // Highlight active doc section on scroll
+    const sections = document.querySelectorAll('[id]');
+    const navLinks = document.querySelectorAll('.docs-nav-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {

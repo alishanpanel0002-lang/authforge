@@ -1,0 +1,92 @@
+// ═══════════════════════════════════════════
+//   AuthForge — Firestore Security Rules
+//   Deploy: firebase deploy --only firestore:rules
+// ═══════════════════════════════════════════
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── HELPER FUNCTIONS ──────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isValidEmail(email) {
+      return email.matches('.*@.*\\..*');
+    }
+
+    // ── USERS COLLECTION ──────────────────
+    match /users/{userId} {
+      // Users can read their own profile; admins can read all
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Users can only create their own profile
+      allow create: if isOwner(userId)
+        && request.resource.data.keys().hasAll(['uid', 'email', 'createdAt'])
+        && request.resource.data.uid == userId;
+
+      // Users can update limited fields; admins can update everything
+      allow update: if (isOwner(userId) &&
+          request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'photoURL', 'lastLoginAt', 'emailVerified', 'apiCallCount']))
+        || isAdmin();
+
+      // Only admins can delete users
+      allow delete: if isAdmin();
+    }
+
+    // ── API KEYS COLLECTION ───────────────
+    match /api_keys/{keyId} {
+      // Users can read their own keys; admins can read all
+      allow read: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+
+      // Users can create keys for themselves
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.keys().hasAll(['userId', 'keyHash', 'name', 'active', 'createdAt']);
+
+      // Users can update their own key names/active status; admins can update anything
+      allow update: if (isAuthenticated() &&
+          resource.data.userId == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['name', 'active', 'usageCount', 'lastUsedAt']))
+        || isAdmin();
+
+      // Users can delete their own keys; admins can delete any
+      allow delete: if (isAuthenticated() && resource.data.userId == request.auth.uid)
+        || isAdmin();
+    }
+
+    // ── API USAGE COLLECTION ──────────────
+    match /api_usage/{logId} {
+      // Users can read their own usage; admins can read all
+      allow read: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+
+      // Only Cloud Functions (via admin SDK) can write usage logs
+      // Client-side writes not permitted
+      allow write: if false;
+    }
+
+    // ── LOGS COLLECTION ───────────────────
+    match /logs/{logId} {
+      // Only admins can read logs
+      allow read: if isAdmin();
+      // Only server can write
+      allow write: if false;
+    }
+
+  }
+}

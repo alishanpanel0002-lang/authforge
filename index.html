@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuthForge — Developer Authentication Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="landing-page">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">⬡</span>
+        <span class="logo-text">AuthForge</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#api">API</a>
+        <a href="docs.html">Docs</a>
+        <a href="login.html" class="btn-ghost">Sign In</a>
+        <a href="signup.html" class="btn-primary">Get Started →</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">◐</span>
+      </button>
+      <button class="nav-hamburger" id="navHamburger">☰</button>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="#features">Features</a>
+      <a href="#api">API</a>
+      <a href="docs.html">Docs</a>
+      <a href="login.html">Sign In</a>
+      <a href="signup.html" class="btn-primary">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Now in public beta · Free to start
+      </div>
+      <h1 class="hero-title">
+        Auth infrastructure<br/>
+        <span class="accent-text">built for developers</span>
+      </h1>
+      <p class="hero-subtitle">
+        Add authentication to your app in minutes. API keys, OAuth, email verification,
+        rate limiting — everything you need, nothing you don't.
+      </p>
+      <div class="hero-cta">
+        <a href="signup.html" class="btn-primary btn-lg">Start for free →</a>
+        <a href="docs.html" class="btn-outline btn-lg">Read the docs</a>
+      </div>
+      <div class="hero-code-preview">
+        <div class="code-window">
+          <div class="code-titlebar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="code-filename">authenticate.js</span>
+          </div>
+          <pre class="code-block"><code><span class="code-comment">// Authenticate any API request in one line</span>
+<span class="code-keyword">const</span> <span class="code-var">response</span> = <span class="code-keyword">await</span> fetch(<span class="code-string">'https://api.authforge.dev/v1/user'</span>, {
+  headers: {
+    <span class="code-string">'Authorization'</span>: <span class="code-string">`Bearer <span class="code-accent">${apiKey}</span>`</span>
+  }
+});
+
+<span class="code-keyword">const</span> <span class="code-var">user</span> = <span class="code-keyword">await</span> <span class="code-var">response</span>.json();
+<span class="code-comment">// → { id: "usr_xxx", email: "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4c28293a0c29342d213c2029622f2321">[email&#160;protected]</a>", plan: "free" }</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="container stats-grid">
+      <div class="stat-item">
+        <span class="stat-num">10ms</span>
+        <span class="stat-label">avg response time</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">99.9%</span>
+        <span class="stat-label">uptime SLA</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">Free</span>
+        <span class="stat-label">forever tier</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">5min</span>
+        <span class="stat-label">to integrate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Features</span>
+        <h2 class="section-title">Everything auth.<br/>Nothing else.</h2>
+        <p class="section-sub">A complete authentication stack so you can focus on building your product.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">🔑</div>
+          <h3>API Key Management</h3>
+          <p>Generate, rotate, and revoke API keys with full audit trails. Keys are hashed and stored securely — shown only once at creation.</p>
+          <div class="feature-tag">Security-first</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant OAuth</h3>
+          <p>Google, GitHub, and more. One-click setup, zero config headaches.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Rate Limiting</h3>
+          <p>Protect your endpoints automatically. Per-key limits, sliding windows.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Usage Analytics</h3>
+          <p>Real-time dashboards. See which keys are active, which are idle.</p>
+        </div>
+        <div class="feature-card feature-card--large">
+          <div class="feature-icon">📋</div>
+          <h3>Complete Audit Logs</h3>
+          <p>Every authentication event, every API call, timestamped and searchable. Full compliance trails built in from day one.</p>
+          <div class="feature-tag">SOC2 Ready</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✉️</div>
+          <h3>Email Verification</h3>
+          <p>Automated flows. Customizable templates. Zero server setup.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">How it works</span>
+        <h2 class="section-title">From zero to auth<br/>in 3 steps</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Create your account</h3>
+          <p>Sign up free. No credit card required. Start with a full-featured account immediately.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Generate API keys</h3>
+          <p>From your dashboard, create API keys for each project or environment you need.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Ship your product</h3>
+          <p>Integrate in minutes. One header, one endpoint, full authentication coverage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API SECTION -->
+  <section class="api-section" id="api">
+    <div class="container">
+      <div class="api-grid">
+        <div class="api-content">
+          <span class="section-tag">Developer API</span>
+          <h2 class="section-title">REST API with<br/>instant access</h2>
+          <p>A clean, well-documented API. Authenticate requests in milliseconds. Works with any language, any framework.</p>
+          <ul class="api-features">
+            <li><span class="check">✓</span> Bearer token authentication</li>
+            <li><span class="check">✓</span> JSON responses</li>
+            <li><span class="check">✓</span> Detailed error codes</li>
+            <li><span class="check">✓</span> Versioned endpoints</li>
+          </ul>
+          <a href="docs.html" class="btn-outline">View full docs →</a>
+        </div>
+        <div class="api-code-panel">
+          <div class="code-tabs">
+            <button class="code-tab active" data-tab="curl">cURL</button>
+            <button class="code-tab" data-tab="node">Node.js</button>
+            <button class="code-tab" data-tab="python">Python</button>
+          </div>
+          <div class="code-panels">
+            <div class="tab-panel active" id="tab-curl">
+<pre><code><span class="code-comment"># Validate an API key</span>
+curl -X GET \
+  https://api.authforge.dev/v1/user \
+  -H <span class="code-string">"Authorization: Bearer af_live_xxxxx"</span></code></pre>
+            </div>
+            <div class="tab-panel" id="tab-node">
+<pre><code><span class="code-keyword">const</span> res = <span class="code-keyword">await</span> fetch(
+  <span class="code-string">'https://api.authforge.dev/v1/user'</span>,
+  { headers: { <span class="code-string">'Authorization'</span>: <span class="code-string">`Bearer ${key}`</span> } }
+);
+<span class="code-keyword">const</span> user = <span class="code-keyword">await</span> res.json();</code></pre>
+            </div>
+            <div class="tab-panel" id="tab-python">
+<pre><code><span class="code-keyword">import</span> requests
+
+res = requests.get(
+  <span class="code-string">"https://api.authforge.dev/v1/user"</span>,
+  headers={<span class="code-string">"Authorization"</span>: <span class="code-string">f"Bearer {key}"</span>}
+)
+user = res.json()</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-glow"></div>
+        <h2>Start building today</h2>
+        <p>Free forever. No credit card. No rate limit on the free tier.</p>
+        <a href="signup.html" class="btn-primary btn-lg">Create free account →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-mark">⬡</span>
+          <span class="logo-text">AuthForge</span>
+        </a>
+        <p>Auth infrastructure for developers.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="docs.html">Documentation</a>
+          <a href="signup.html">Get Started</a>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <a href="login.html">Sign In</a>
+          <a href="signup.html">Sign Up</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© 2025 AuthForge. Built on Firebase.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/utils.js"></script>
+  <script>
+    // Code tabs
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('ac

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — AuthForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-mark">⬡</span>
+        <span>AuthForge</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <a href="dashboard.html" class="sidebar-link active">
+          <span class="sidebar-link-icon">⊞</span> Overview
+        </a>
+        <a href="dashboard.html#api-keys" class="sidebar-link">
+          <span class="sidebar-link-icon">🔑</span> API Keys
+        </a>
+        <a href="dashboard.html#logs" class="sidebar-link">
+          <span class="sidebar-link-icon">📋</span> Request Logs
+        </a>
+        <a href="dashboard.html#profile" class="sidebar-link">
+          <span class="sidebar-link-icon">👤</span> Profile
+        </a>
+        <div class="sidebar-section">Developer</div>
+        <a href="docs.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📖</span> Documentation
+        </a>
+        <a href="playground.html" class="sidebar-link">
+          <span class="sidebar-link-icon">⚡</span> API Playground
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="theme-toggle" id="themeToggle" style="width:100%;border-radius:8px;justify-content:flex-start;gap:10px;padding:10px 12px">
+          <span class="theme-icon">◐</span>
+          <span style="font-size:0.85rem;font-weight:500">Toggle theme</span>
+        </button>
+        <div class="sidebar-user" style="margin-top:8px">
+          <div class="user-avatar user-avatar-initial" id="sidebarAvatar">?</div>
+          <div class="user-info">
+            <div class="user-name user-name-display">Loading...</div>
+            <div class="user-role user-email-display" style="font-size:0.72rem"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-title">
+          <h1>Dashboard</h1>
+          <p>Welcome back! Here's your API overview.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-primary btn-sm" onclick="openCreateKeyModal()">+ New API Key</button>
+          <button class="btn-outline btn-sm" id="logoutBtn">Sign Out</button>
+        </div>
+      </div>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-label">Total API Calls</div>
+            <div class="stat-card-val" id="totalApiCalls">—</div>
+            <div class="stat-card-sub">All time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Active Keys</div>
+            <div class="stat-card-val" id="activeKeysCount">—</div>
+            <div class="stat-card-sub">Currently enabled</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Calls This Week</div>
+            <div class="stat-card-val" id="weekApiCalls">—</div>
+            <div class="stat-card-sub">Last 7 days</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Plan</div>
+            <div class="stat-card-val" style="font-size:1.4rem">
+              <span class="badge-purple" style="display:inline-block;padding:4px 12px;border-radius:6px" class="plan-display">Free</span>
+            </div>
+            <div class="stat-card-sub">Upgrade anytime</div>
+          </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="dash-grid">
+
+          <!-- API USAGE CHART -->
+          <div class="card span-full">
+            <div class="card-header">
+              <span class="card-title">API Usage — Last 7 Days</span>
+              <span class="text-muted text-xs font-mono" id="chartRefresh">Auto-refresh</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="usageChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- API KEYS -->
+          <div class="card span-full" id="api-keys">
+            <div class="card-header">
+              <span class="card-title">API Keys <span class="badge-purple" style="padding:2px 8px;border-radius:4px;font-size:0.75rem;margin-left:8px" id="apiKeyCount">0</span></span>
+              <button class="btn-primary btn-sm" onclick="openCreateKeyModal()">+ Generate Key</button>
+            </div>
+            <div class="card-body" style="padding:16px">
+              <div class="apikey-list" id="apiKeysList">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- PROFILE -->
+          <div class="card" id="profile">
+            <div class="card-header">
+              <span class="card-title">Profile</span>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+                <div class="user-avatar" style="width:52px;height:52px;font-size:1.4rem" id="profileAvatarLg">?</div>
+                <div>
+                  <div style="font-weight:700" class="user-name-display">—</div>
+                  <div class="text-muted text-sm user-email-display">—</div>
+                </div>
+              </div>
+              <table style="font-size:0.87rem">
+                <tr>
+                  <td style="padding:8px 0;color:var(--text-3);width:120px">Email status</td>
+                  <td><span class="status-badge" id="emailVerifiedBadge">—</span></td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;color:var(--text-3)">Member since</td>
+                  <td id="memberSince" class="font-mono text-sm">—</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;color:var(--text-3)">Plan</td>
+                  <td><span class="plan-display">Free</span></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- QUICK START -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Quick Start</span></div>
+            <div class="card-body">
+              <p style="font-size:0.87rem;color:var(--text-2);margin-bottom:16px">Make your first authenticated API request:</p>
+              <div class="code-window">
+                <div class="code-titlebar">
+                  <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                </div>
+                <pre class="code-block" style="font-size:0.78rem"><code><span class="code-keyword">curl</span> -X GET \
+  https://YOUR-SITE.netlify.app/api/user \
+  -H <span class="code-string">"Authorization: Bearer YOUR_KEY"</span></code></pre>
+              </div>
+              <a href="docs.html" class="btn-outline btn-full" style="margin-top:12px">View full docs →</a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RECENT LOGS -->
+        <div class="card" id="logs">
+          <div class="card-header">
+            <span class="card-title">Recent Request Logs</span>
+            <span class="text-xs text-muted font-mono">Last 10 requests</span>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Endpoint</th>
+                  <th>Status</th>
+                  <th>Response Time</th>
+                  <th>When</th>
+                </tr>
+              </thead>
+              <tbody id="recentLogsBody">
+                <tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:32px">Loading logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <!-- SIDEBAR MOBILE TOGGLE -->
+  <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+  <!-- CREATE KEY MODAL -->
+  <div class="modal-overlay" id="createKeyModal">
+    <div class="modal">
+      <div class="modal-title">Generate New API Key</div>
+      <div class="modal-sub">Give your key a name to remember which project it belongs to.</div>
+      <div class="form-group">
+        <label>Key name</label>
+        <input type="text" id="newKeyName" placeholder="e.g. Production, My App, Testing" />
+      </div>
+      <div id="newKeyResult" class="hidden">
+        <div style="background:var(--green-bg);border:1px solid rgba(34,211,161,0.2);border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:0.82rem;color:var(--green)">
+          ⚠ Copy this key now — it won't be shown again!
+        </div>
+        <div class="key-reveal" id="newKeyValue">
+          <button class="btn-icon key-reveal-copy" onclick="copyToClipboard(document.getElementById('newKeyValue').dataset.key, 'API key copied!')">⎘</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" id="cancelCreateKey">Cancel</button>
+        <button class="btn-primary" id="createKeyBtn">Generate Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RENAME KEY MODAL -->
+  <div class="modal-overlay" id="renameKeyModal">
+    <div class="modal">
+      <div class="modal-title">Rename API Key</div>
+      <div class="form-group" style="margin-top:16px">
+        <label>New name</label>
+        <input type="text" id="renameKeyInput" placeholder="Key name" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" id="cancelRenameKey">Cancel</button>
+        <button class="btn-primary" id="confirmRenameKey">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/utils.js"></script>
+  <script type="module">
+    import {
+      initDashboard,
+      loadApiKeys,
+      createApiKeyClientSide,
+      deleteApiKey,
+      openCreateKeyModal,
+      renameApiKey
+    } from './js/dashboard.js';
+    import { auth, logOut, onAuthStateChanged } from './js/auth.js';
+
+    // Init
+    initDashboard();
+    initSidebarToggle();
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logOut();
+    });
+
+    // Close modals on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) overlay.classList.remove('open');
+      });
+    });
+
+    // Cancel buttons
+    document.getElementById('cancelCreateKey').addEventListener('click', () => {
+      document.getElementById('createKeyModal').classList.remove('open');
+      document.getElementById('newKeyResult').classList.add('hidden');
+      document.getElementById('newKeyName').value = '';
+      document.getElementById('createKeyBtn').textContent = 'Generate Key';
+      document.getElementById('createKeyBtn').disabled = false;
+    });
+
+    document.getElementById('cancelRenameKey').addEventListener('click', () => {
+      document.getElementById('renameKeyModal').classList.remove('open');
+    });
+
+    // Create key
+    document.getElementById('createKeyBtn').addEventListener('click', async () => {
+      const name = document.getElementById('newKeyName').value.trim() || 'My API Key';
+      const btn = document.getElementById('createKeyBtn');
+
+      const resultEl = document.getElementById('newKeyResult');
+      if (!resultEl.classList.contains('hidden')) {
+        // Second click = done
+        document.getElementById('createKeyModal').classList.remove('open');
+        resultEl.classList.add('hidden');
+        document.getElementById('newKeyName').value = '';
+        btn.textContent = 'Generate Key';
+        return;
+      }
+
+      setLoading(btn, true, 'Generating...');
+      try {
+        onAuthStateChanged(auth, async (user) => {
+          if (!user) return;
+          const result = await createApiKeyClientSide(name, user.uid);
+
+          const keyEl = document.getElementById('newKeyValue');
+          keyEl.textContent = result.rawKey;
+          keyEl.dataset.key = result.rawKey;
+
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'btn-icon key-reveal-copy';
+          copyBtn.textContent = '⎘';
+          copyBtn.onclick = () => copyToClipboard(result.rawKey, 'API key copied!');
+          keyEl.appendChild(copyBtn);
+
+          resultEl.classList.remove('hidden');
+          btn.innerHTML = 'Done';
+          btn.disabled = false;
+          showToast('API key generated! Copy it now.', 'success');
+          await loadApiKeys(user.uid);
+        });
+      } catch (err) {
+        showToast('Failed to create key: ' + err.message, 'error');
+        setLoading(btn, false, 'Generate Key');
+      }
+    });
+
+    // Rename key confirm
+    document.getElementById('confirmRenameKey').addEventListener('click', async () => {
+      const modal = document.getElementById('renameKeyModal');
+      const keyId = modal.dataset.keyId;
+      const newName = document.getElementById('renameKeyInput').value.trim();
+      if (!newName) return showToast('Please enter a name', 'warning');
+      await renameApiKey(keyId, newName);
+      modal.classList.remove('open');
+    });
+
+    // Update avatar initials after auth
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const name = user.displayName || user.email;
+        const initial = name[0].toUpperCase();
+        document.querySelectorAll('.user-avatar-initial').forEach(el => el.textContent = initial);
+        const profileAvatarLg = document.getElementById('profileAvatarLg');
+        if (profileAvatarLg) profileAvatarLg.textContent = initial;
+      }
+    });
+  </script>
+</body>
+</html>
