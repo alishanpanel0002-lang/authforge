@@ -6,7 +6,7 @@
   <title>Admin — AuthForge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -183,10 +183,10 @@
   <button class="sidebar-toggle" id="sidebarToggle">☰</button>
   <div id="toast-container"></div>
 
-  <script src="js/utils.js"></script>
+  <script src="/js/utils.js"></script>
   <script type="module">
-    import { app } from './firebase/firebase-config.js';
-    import { requireAuth, logOut, auth } from './js/auth.js';
+    import { app } from '/firebase/firebase-config.js';
+    import { requireAuth, logOut, auth } from '/js/auth.js';
     import {
       getFirestore,
       collection,

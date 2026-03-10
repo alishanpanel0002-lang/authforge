@@ -20,7 +20,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
-import { app } from '../firebase/firebase-config.js';
+import { app } from '/firebase/firebase-config.js';
 import { requireAuth, logOut, onAuthStateChanged, auth } from './auth.js';
 
 const db = getFirestore(app);

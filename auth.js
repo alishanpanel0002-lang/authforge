@@ -23,7 +23,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-import { app } from '../firebase/firebase-config.js';
+import { app } from '/firebase/firebase-config.js';
 
 const auth = getAuth(app);
 const db = getFirestore(app);

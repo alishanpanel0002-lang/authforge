@@ -6,7 +6,7 @@
   <title>Dashboard — AuthForge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -249,7 +249,7 @@
 
   <div id="toast-container"></div>
 
-  <script src="js/utils.js"></script>
+  <script src="/js/utils.js"></script>
   <script type="module">
     import {
       initDashboard,
@@ -258,8 +258,8 @@
       deleteApiKey,
       openCreateKeyModal,
       renameApiKey
-    } from './js/dashboard.js';
-    import { auth, logOut, onAuthStateChanged } from './js/auth.js';
+    } from '/js/dashboard.js';
+    import { auth, logOut, onAuthStateChanged } from '/js/auth.js';
 
     // Init
     initDashboard();
