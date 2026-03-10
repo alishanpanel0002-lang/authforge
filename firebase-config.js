@@ -1,29 +1,25 @@
 // ═══════════════════════════════════════════
 //   AuthForge — Firebase Configuration
-//   Replace with your Firebase project config
+//   Replace YOUR_* values with your actual Firebase config
 // ═══════════════════════════════════════════
 
-// IMPORTANT: Replace these values with your actual Firebase config
-// Get this from Firebase Console → Project Settings → General → Your Apps
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCzYZihIYa2S3OJTvkpHWJqOrFhJYzPMqM",
-  authDomain: "authforge-5d068.firebaseapp.com",
-  projectId: "authforge-5d068",
-  storageBucket: "authforge-5d068.firebasestorage.app",
-  messagingSenderId: "653397180076",
-  appId: "1:653397180076:web:99f8f48882b4422504a909"
-};
-
-// Initialize Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getFunctions } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+
+// ⬇ Replace these with your Firebase project values
+// Firebase Console → Project Settings → General → Your Apps → Web
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const functions = getFunctions(app);
 
-export { app, auth, db, functions, firebaseConfig };
+export { app, auth, db, firebaseConfig };

@@ -19,12 +19,10 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 import { app } from '/firebase/firebase-config.js';
-import { requireAuth, logOut, onAuthStateChanged, auth } from './auth.js';
+import { requireAuth, logOut, onAuthStateChanged, auth } from '/js/auth.js';
 
 const db = getFirestore(app);
-const functions = getFunctions(app);
 
 // ── INIT DASHBOARD ────────────────────────
 async function initDashboard() {
@@ -161,14 +159,7 @@ function openCreateKeyModal() {
 }
 
 async function createApiKey(name, uid) {
-  const createKey = httpsCallable(functions, 'createApiKey');
-  try {
-    const result = await createKey({ name });
-    return result.data;
-  } catch (err) {
-    // Fallback: create key client-side if functions not deployed
-    return createApiKeyClientSide(name, uid);
-  }
+  return createApiKeyClientSide(name, uid);
 }
 
 async function createApiKeyClientSide(name, uid) {
